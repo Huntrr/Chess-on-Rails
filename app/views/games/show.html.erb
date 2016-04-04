@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>White player:</strong>
+  <%= @game.white_player %>
+</p>
+
+<p>
+  <strong>Black player:</strong>
+  <%= @game.black_player %>
+</p>
+
+<p>
+  <strong>Game state:</strong>
+  <%= @game.game_state %>
+</p>
+
+<p>
+  <strong>Allow undos:</strong>
+  <%= @game.allow_undos %>
+</p>
+
+<p>
+  <strong>Sandbox mode:</strong>
+  <%= @game.sandbox_mode %>
+</p>
+
+<%= link_to 'Edit', edit_game_path(@game) %> |
+<%= link_to 'Back', games_path %>

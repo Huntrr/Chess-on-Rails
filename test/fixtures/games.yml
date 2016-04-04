@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  white_player_id: 
+  black_player_id: 
+  game_state: MyText
+  allow_undos: false
+  sandbox_mode: false
+
+two:
+  white_player_id: 
+  black_player_id: 
+  game_state: MyText
+  allow_undos: false
+  sandbox_mode: false
