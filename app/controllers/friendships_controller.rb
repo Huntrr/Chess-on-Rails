@@ -1,52 +1,27 @@
 class FriendshipsController < ApplicationController
-  before_action :set_friendship, only: [:show, :edit, :update, :destroy]
+  before_action :set_friendship, only: [:show, :accept, :destroy]
 
-  # GET /friendships/1
-  # GET /friendships/1.json
-  def show
-  end
-
-  # GET /friendships/new
-  def new
-    @friendship = Friendship.new
-  end
-
-  # POST /friendships
-  # POST /friendships.json
+  # POST /friendships/1
   def create
-    @friendship = Friendship.new(friendship_params)
-
-    respond_to do |format|
-      if @friendship.save
-        format.html { redirect_to @friendship, notice: 'Friendship was successfully created.' }
-        format.json { render :show, status: :created, location: @friendship }
-      else
-        format.html { render :new }
-        format.json { render json: @friendship.errors, status: :unprocessable_entity }
-      end
-    end
+    current_user.send_friend_request params[:friend_id]
+    friend = User.find(params[:friend_id])
+    redirect_to friend, notice: 'Friend request sent'
   end
 
-  # PATCH/PUT /friendships/1
-  # PATCH/PUT /friendships/1.json
-  def update
-    respond_to do |format|
-      if @friendship.update(friendship_params)
-        format.html { redirect_to @friendship, notice: 'Friendship was successfully updated.' }
-        format.json { render :show, status: :ok, location: @friendship }
-      else
-        format.html { render :edit }
-        format.json { render json: @friendship.errors, status: :unprocessable_entity }
-      end
-    end
+  # PATCH /friendships/1
+  def accept
+    current_user.accept_friend_request @friendship.user
+    redirect_to current_user, notice: 'Friend request accepted'
   end
 
   # DELETE /friendships/1
   # DELETE /friendships/1.json
   def destroy
+    other = Friendship.find_by(user: @friendship.friend, friend: @friendship.user)
+    other.destroy unless other.nil?
     @friendship.destroy
     respond_to do |format|
-      format.html { redirect_to friendships_url, notice: 'Friendship was successfully destroyed.' }
+      format.html { redirect_to current_user, notice: 'Friendship was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -55,10 +30,5 @@ class FriendshipsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_friendship
       @friendship = Friendship.find(params[:id])
-    end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def friendship_params
-      params.require(:friendship).permit(:user_id, :friend_id)
     end
 end

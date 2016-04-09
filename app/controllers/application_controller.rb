@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   end
 
   helper_method def current_user
-    @user ||= User.find(session[:user_id]) if logged_in?
+    @logged_in_user ||= User.find(session[:user_id]) if logged_in?
   end
 
   helper_method def is?(user)

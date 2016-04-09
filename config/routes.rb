@@ -2,10 +2,9 @@ Rails.application.routes.draw do
   resources :users
   resources :games
 
-  patch 'friendships/:id' => 'friendships#update'
-  put 'friendships/:id' => 'friendships#update'
-  post 'friendships' => 'friendships#create'
+  post 'friendships/:friend_id' => 'friendships#create'
   delete 'friendships/:id' => 'friendships#destroy'
+  patch 'friendships/:id' => 'friendships#accept'
 
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'

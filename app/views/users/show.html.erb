@@ -25,8 +25,66 @@
   <%= @user.bio %>
 </p>
 
+<p>
+  <strong>Friends:</strong>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Tagline/Bio</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @user.friendships.each do |friendship| %>
+        <tr>
+          <td><%= link_to friendship.friend.name, friendship.friend %></td>
+          <td><%= friendship.friend.bio %></td>
+          <% if is?(@user) %>
+            <td><%= link_to 'Remove friend', "/friendships/#{friendship.id}", method: :delete %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</p>
+
+<% if is?(@user) %>
+<p>
+  <strong>Friend Requests:</strong>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Tagline/Bio</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @user.friend_requests_relationships.each do |request| %>
+        <tr>
+          <td><%= link_to request.user.name, request.user %></td>
+          <td><%= request.user.bio %></td>
+          <td><%= link_to 'Accept request', "/friendships/#{request.id}", method: :patch %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</p>
+<% end %>
+
 <% if is?(@user) %>
   <%= link_to 'Edit', edit_user_path(@user) %> |
   <%= link_to 'Delete User', @user, method: :delete, data: { confirm: 'Are you sure?' } %> |
+<% elsif logged_in? %>
+  <% if current_user.friend_requests.exists? @user %>
+    <%= link_to "Accept #{@user.name}'s friend request", "/friendships/#{current_user.friend_requests_relationships.find_by(user: @user).id}", method: :patch %> |
+  <% elsif current_user.pending_friends.exists? @user %>
+    Waiting for <%= @user.name %> to respond to your friend request |
+  <% elsif !current_user.friends.exists? @user %>
+    <%= link_to "Send #{@user.name} a friend request", "/friendships/#{@user.id}", method: :post %> |
+  <% end %>
 <% end %>
 <%= link_to 'Back', users_path %>
