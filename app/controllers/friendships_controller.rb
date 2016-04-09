@@ -1,12 +1,6 @@
 class FriendshipsController < ApplicationController
   before_action :set_friendship, only: [:show, :edit, :update, :destroy]
 
-  # GET /friendships
-  # GET /friendships.json
-  def index
-    @friendships = Friendship.all
-  end
-
   # GET /friendships/1
   # GET /friendships/1.json
   def show
@@ -15,10 +9,6 @@ class FriendshipsController < ApplicationController
   # GET /friendships/new
   def new
     @friendship = Friendship.new
-  end
-
-  # GET /friendships/1/edit
-  def edit
   end
 
   # POST /friendships
@@ -69,6 +59,6 @@ class FriendshipsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def friendship_params
-      params.require(:friendship).permit(:user_id, :friend_id, :accepted)
+      params.require(:friendship).permit(:user_id, :friend_id)
     end
 end

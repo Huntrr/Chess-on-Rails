@@ -1,22 +1,22 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <strong>White player:</strong>
+  <strong>White:</strong>
   <%= @game.white_player %>
 </p>
 
 <p>
-  <strong>Black player:</strong>
+  <strong>Black:</strong>
   <%= @game.black_player %>
 </p>
 
 <p>
-  <strong>Game state:</strong>
+  <strong>PGN:</strong>
   <%= @game.game_state %>
 </p>
 
 <p>
-  <strong>Allow undos:</strong>
+  <strong>Undoes allowed:</strong>
   <%= @game.allow_undos %>
 </p>
 
@@ -25,5 +25,7 @@
   <%= @game.sandbox_mode %>
 </p>
 
-<%= link_to 'Edit', edit_game_path(@game) %> |
+<% if is?(@game.white_player) || is?(@game.black_player) %>
+  <%= link_to 'Delete Game', @game, method: :delete, data: { confirm: 'Are you sure?' } %> |
+<% end %>
 <%= link_to 'Back', games_path %>

@@ -1,0 +1,15 @@
+<nav class="nav-banner">
+  <a class="nav-btn" href="/">Home</a>
+  <a class="nav-btn" href="/users">Users</a>
+  <a class="nav-btn" href="/games">Games</a>
+  <!-- Add link to user's show page and log out button if logged in -->
+  <% if logged_in? %>
+    <%= link_to current_user.name, current_user, class: 'nav-btn' %>
+    <%= link_to 'Log out', '/logout', method: :delete, class: 'nav-btn' %>
+  <!-- Add log in/sign up links otherwise -->
+  <% else %>
+    <%= link_to 'Log in', '/login', class: 'nav-btn' %>
+    <%= link_to 'Sign up', '/users/new', class: 'nav-btn' %>
+  <% end %>
+  </span>
+</nav>

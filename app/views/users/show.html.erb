@@ -6,17 +6,12 @@
 </p>
 
 <p>
-  <strong>Password hash:</strong>
-  <%= @user.password_hash %>
-</p>
-
-<p>
-  <strong>Wins:</strong>
+  <strong># Wins:</strong>
   <%= @user.wins %>
 </p>
 
 <p>
-  <strong>Losses:</strong>
+  <strong># Losses:</strong>
   <%= @user.losses %>
 </p>
 
@@ -26,9 +21,12 @@
 </p>
 
 <p>
-  <strong>Bio:</strong>
+  <strong>Tagline/Bio:</strong>
   <%= @user.bio %>
 </p>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
+<% if is?(@user) %>
+  <%= link_to 'Edit', edit_user_path(@user) %> |
+  <%= link_to 'Delete User', @user, method: :delete, data: { confirm: 'Are you sure?' } %> |
+<% end %>
 <%= link_to 'Back', users_path %>

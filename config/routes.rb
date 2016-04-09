@@ -1,7 +1,19 @@
 Rails.application.routes.draw do
-  resources :friendships
-  resources :games
   resources :users
+  resources :games
+
+  patch 'friendships/:id' => 'friendships#update'
+  put 'friendships/:id' => 'friendships#update'
+  post 'friendships' => 'friendships#create'
+  delete 'friendships/:id' => 'friendships#destroy'
+
+  get 'login' => 'sessions#new'
+  post 'login' => 'sessions#create'
+  delete 'logout' => 'sessions#destroy'
+
+
+  root 'welcome#index'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

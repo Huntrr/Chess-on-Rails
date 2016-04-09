@@ -17,19 +17,15 @@
   <tbody>
     <% @games.each do |game| %>
       <tr>
-        <td><%= game.white_player %></td>
-        <td><%= game.black_player %></td>
+        <td><%= link_to game.white_player.name, game.white_player %></td>
+        <td><%= link_to game.black_player.name, game.black_player %></td>
         <td><%= game.game_state %></td>
         <td><%= game.allow_undos %></td>
         <td><%= game.sandbox_mode %></td>
         <td><%= link_to 'Show', game %></td>
-        <td><%= link_to 'Edit', edit_game_path(game) %></td>
-        <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-
-<%= link_to 'New Game', new_game_path %>
