@@ -1,14 +1,14 @@
+<div class="container">
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Users</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Name</th>
       <th># Wins</th>
       <th># Losses</th>
-      <th>Rating</th>
       <th>Tagline/Bio</th>
       <th colspan="3"></th>
     </tr>
@@ -20,17 +20,17 @@
         <td><%= link_to user.name, user %></td>
         <td><%= user.wins %></td>
         <td><%= user.losses %></td>
-        <td><%= user.rating %></td>
         <td><%= user.bio %></td>
         <% if is?(user) %>
           <td><%= link_to 'Edit', edit_user_path(user) %></td>
         <% end %>
-        <% if logged_in? %>
-          <td><%= link_create_new_game 'Challenge', user %></td>
+        <% if logged_in? && !is?(user) %>
+          <td><%= link_to 'Challenge', link_create_new_game(user) %></td>
         <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
+</div>
 
 <br>

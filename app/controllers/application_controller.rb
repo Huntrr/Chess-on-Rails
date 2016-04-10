@@ -15,7 +15,23 @@ class ApplicationController < ActionController::Base
     logged_in? && session[:user_id] == user.id
   end
 
-  helper_method def link_create_new_game(label, opponent)
-    link_to label, new_game_path, opponent_id: opponent.id
+  helper_method def link_create_new_game(opponent)
+    "/games/new?opponent_id=#{opponent.id}"
+  end
+
+  helper_method def game_result(result)
+    case result.to_i
+      when 1
+        'white won'
+
+      when -1
+        'black won'
+
+      when 0
+        'in progress'
+
+      else
+        'no winner'
+    end
   end
 end

@@ -13,9 +13,9 @@
 
   <div class="field">
     <%= f.label 'Play as' %><br>
-    <%= f.select :play_as, options_for_select([['White', 1], ['Black', 2]], 1 ) %>
+    <%= f.select :white_player, options_for_select([['White', 1], ['Black', 2]], 1) %>
   </div>
-  <div class="field" display="none">
+  <div class="field" style="display: none;">
     <%= f.text_field :opponent_id, value: @opponent_id %>
   </div>
   <div class="field">

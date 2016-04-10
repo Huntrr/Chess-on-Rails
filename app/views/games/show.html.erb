@@ -1,22 +1,42 @@
-<p id="notice"><%= notice %></p>
+<script>
+  var s_id = <%= @game.id %>;
+  var s_pos = '<%= @game.game_state %>';
+  var s_side = '<%= @side %>';
+  var s_undos = <%= @game.allow_undos %>;
+  var s_sandbox = <%= @game.sandbox_mode %>;
+  var s_playing = <%= @playing %>;
+  goAndPlay();
+</script>
 
+<div class="container hide">
 <p>
   <strong>White:</strong>
-  <%= @game.white_player %>
+  <%= link_to @game.white_player.name, @game.white_player %>
 </p>
 
 <p>
   <strong>Black:</strong>
-  <%= @game.black_player %>
+  <%= link_to @game.black_player.name, @game.black_player %>
 </p>
+</div>
 
-<p>
+<div class="container">
+  <p id="notice"><%= notice %></p>
+  <p class="hide"><span id="status" style="font-weight: BOLD;"></span></p>
+  <div id="board"></div><br class="hide">
+  <p class="show pad"><span id="status2" style="font-weight: BOLD;"></span></p>
+  <input type="button" id="undo" value="Undo Move" <%= "disabled" if !@game.allow_undos %>/>
+  <input type="button" id="flip" value="Flip Board" />
+</div>
+
+<div class="container">
+  <p <% if @game.sandbox_mode %>style="display: none;"<% end %>>
   <strong>PGN:</strong>
-  <%= @game.game_state %>
+  <span id="pgn"><%= @game.game_state %></span>
 </p>
 
 <p>
-  <strong>Undoes allowed:</strong>
+  <strong>Undos allowed:</strong>
   <%= @game.allow_undos %>
 </p>
 
@@ -24,8 +44,11 @@
   <strong>Sandbox mode:</strong>
   <%= @game.sandbox_mode %>
 </p>
+</div>
 
+<div class="container">
 <% if is?(@game.white_player) || is?(@game.black_player) %>
   <%= link_to 'Delete Game', @game, method: :delete, data: { confirm: 'Are you sure?' } %> |
 <% end %>
 <%= link_to 'Back', games_path %>
+</div>

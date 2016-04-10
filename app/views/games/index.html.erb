@@ -1,14 +1,16 @@
+<div class="container">
 <p id="notice"><%= notice %></p>
 
 <h1>Listing Games</h1>
 
-<table>
+<br>
+
+<table class="table">
   <thead>
     <tr>
       <th>White player</th>
       <th>Black player</th>
-      <th>Game state</th>
-      <th>Allow undos</th>
+      <th>Result</th>
       <th>Sandbox mode</th>
       <th colspan="3"></th>
     </tr>
@@ -19,13 +21,13 @@
       <tr>
         <td><%= link_to game.white_player.name, game.white_player %></td>
         <td><%= link_to game.black_player.name, game.black_player %></td>
-        <td><%= game.game_state %></td>
-        <td><%= game.allow_undos %></td>
-        <td><%= game.sandbox_mode %></td>
+        <td><%= game_result(game.result) %></td>
+        <td><%= if game.sandbox_mode then 'yes' else 'no' end %></td>
         <td><%= link_to 'Show', game %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+</div>
 
 <br>

@@ -10,6 +10,8 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
+    @side = if @game.black_player.id == current_user.id then 'black' else 'white' end
+    @playing = @game.black_player.id == current_user.id || @game.white_player.id == current_user.id
   end
 
   # GET /games/new
@@ -21,14 +23,17 @@ class GamesController < ApplicationController
   # POST /games
   # POST /games.json
   def create
-    @game = Game.new(game_params)
-    if game_params[:play_as] == 1
-      @game.white_player = current_user
-      @game.black_player = User.find(game_params[:opponent_id])
+    gp = game_params
+    if gp[:white_player].to_i == 1
+      gp[:white_player] = current_user
+      gp[:black_player] = User.find(game_params[:opponent_id])
     else
-      @game.white_player = User.find(game_params[:opponent_id])
-      @game.black_player = current_user
+      gp[:white_player] = User.find(game_params[:opponent_id])
+      gp[:black_player] = current_user
     end
+
+    gp.delete :opponent_id
+    @game = Game.new(gp)
 
     respond_to do |format|
       if @game.save
@@ -78,6 +83,6 @@ class GamesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
-      params.require(:game).permit(:play_as, :opponent, :game_state, :allow_undos, :sandbox_mode)
+      params.require(:game).permit(:white_player, :opponent_id, :game_state, :allow_undos, :sandbox_mode, :result)
     end
 end

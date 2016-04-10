@@ -1,3 +1,4 @@
+<div class="container">
 <p id="notice"><%= notice %></p>
 
 <p>
@@ -16,17 +17,14 @@
 </p>
 
 <p>
-  <strong>Rating:</strong>
-  <%= @user.rating %>
-</p>
-
-<p>
   <strong>Tagline/Bio:</strong>
   <%= @user.bio %>
 </p>
+</div>
 
+<div class="container">
 <p>
-  <strong>Friends:</strong>
+  <strong><%= @user.name %> has <%= pluralize(@user.friendships.count, "friend") %></strong>
   <table>
     <thead>
       <tr>
@@ -44,45 +42,86 @@
           <% if is?(@user) %>
             <td><%= link_to 'Remove friend', "/friendships/#{friendship.id}", method: :delete %></td>
           <% end %>
-          <% if logged_in? %>
-            <td><%= link_create_new_game 'Challenge', friendship.friend %></td>
+          <% if logged_in? && !is?(friendship.friend) %>
+            <td><%= link_to 'Challenge', link_create_new_game(friendship.friend) %></td>
           <% end %>
         </tr>
       <% end %>
     </tbody>
   </table>
 </p>
+</div>
 
 <% if is?(@user) %>
-<p>
-  <strong>Friend Requests:</strong>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Tagline/Bio</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @user.friend_requests_relationships.each do |request| %>
+  <% if @user.friend_requests_relationships.count > 0 %>
+  <div class="container">
+  <p>
+    <strong>Friend Requests:</strong>
+    <table>
+      <thead>
         <tr>
-          <td><%= link_to request.user.name, request.user %></td>
-          <td><%= request.user.bio %></td>
-          <td><%= link_to 'Accept request', "/friendships/#{request.id}", method: :patch %></td>
+          <th>Name</th>
+          <th>Tagline/Bio</th>
+          <th colspan="3"></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</p>
+      </thead>
+
+      <tbody>
+        <% @user.friend_requests_relationships.each do |request| %>
+          <tr>
+            <td><%= link_to request.user.name, request.user %></td>
+            <td><%= request.user.bio %></td>
+            <td><%= link_to 'Accept request', "/friendships/#{request.id}", method: :patch %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </p>
+  </div>
+  <% end %>
 <% end %>
 
-<% if logged_in? %>
-  <%= link_create_new_game "Click here to start a new game against #{@user.name}", @user %>
-  <br><br>
+<div class="container">
+  <p>
+    <strong>Games:</strong>
+    <% if @user.num_games > 0 %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>White player</th>
+            <th>Black player</th>
+            <th>Result</th>
+            <th>Sandbox mode</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @user.games.each do |game| %>
+            <tr>
+              <td><%= link_to game.white_player.name, game.white_player %></td>
+              <td><%= link_to game.black_player.name, game.black_player %></td>
+              <td><%= game_result(game.result) %></td>
+              <td><%= if game.sandbox_mode then 'yes' else 'no' end %></td>
+              <td><%= link_to 'Show', game %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  <% else %>
+    <%= @user.name %> hasn't played any games yet :(
+  <% end %>
+  </p>
+</div>
+
+
+<% if logged_in? && !is?(@user) %>
+  <div class="container">
+  <%= link_to "Click here to start a new game against #{@user.name}", link_create_new_game(@user) %>
+</div>
 <% end %>
 
+<div class="container">
 <% if is?(@user) %>
   <%= link_to 'Edit', edit_user_path(@user) %> |
   <%= link_to 'Delete User', @user, method: :delete, data: { confirm: 'Are you sure?' } %> |
@@ -96,3 +135,4 @@
   <% end %>
 <% end %>
 <%= link_to 'Back', users_path %>
+</div>

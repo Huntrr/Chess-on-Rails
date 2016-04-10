@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(version: 20160404173350) do
     t.text     "game_state"
     t.boolean  "allow_undos",     default: true,  null: false
     t.boolean  "sandbox_mode",    default: false, null: false
+    t.integer  "result",          default: 0,     null: false
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
   end
@@ -40,12 +41,11 @@ ActiveRecord::Schema.define(version: 20160404173350) do
   create_table "users", force: :cascade do |t|
     t.string   "name"
     t.text     "password_hash"
-    t.integer  "wins",          default: 0,    null: false
-    t.integer  "losses",        default: 0,    null: false
-    t.integer  "rating",        default: 1000, null: false
+    t.integer  "wins",          default: 0, null: false
+    t.integer  "losses",        default: 0, null: false
     t.text     "bio"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
   end
 
 end

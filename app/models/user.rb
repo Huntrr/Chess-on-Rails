@@ -19,8 +19,6 @@ class User < ActiveRecord::Base
   has_many :pending_friends, source: :friend, through: :pending_friendships
   has_many :friend_requests, through: :friend_requests_relationships, source: :user
   
-  has_many :games
-
   def password
     @password ||= Password.new(password_hash)
   end
@@ -28,6 +26,14 @@ class User < ActiveRecord::Base
   def password=(new_password)
     @password = Password.create(new_password)
     self.password_hash = @password
+  end
+
+  def num_games
+    Game.where(white_player_id: self.id).count + Game.where(black_player_id: self.id).count
+  end
+
+  def games
+    Game.where('white_player_id= ? OR black_player_id= ?', self.id, self.id)
   end
 
   def letter?(pattern)
@@ -66,13 +72,10 @@ class User < ActiveRecord::Base
   end
 
   def update_wins_losses
-    new_wins = 0
-    new_losses = 0
-    self.games.each do |game|
-      is_white = game.white_player.id == self.id
-      new_wins = new_wins + 1 if (is_white && game.result == 1) || (!is_white && game.result == -1)
-      new_losses = new_losses + 1 if (is_white && game.result == -1) || (!is_white && game.result == 1)
-    end
+    new_wins = Game.where(white_player_id: self.id, result: 1).count
+    new_wins = new_wins + Game.where(black_player_id: self.id, result: -1).count
+    new_losses = Game.where(black_player_id: self.id, result: 1).count
+    new_losses = new_losses + Game.where(white_player_id: self.id, result: -1).count
     self.wins = new_wins
     self.losses = new_losses
     self.save
