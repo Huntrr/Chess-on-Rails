@@ -14,4 +14,8 @@ class ApplicationController < ActionController::Base
   helper_method def is?(user)
     logged_in? && session[:user_id] == user.id
   end
+
+  helper_method def link_create_new_game(label, opponent)
+    link_to label, new_game_path, opponent_id: opponent.id
+  end
 end

@@ -15,15 +15,24 @@ class GamesController < ApplicationController
   # GET /games/new
   def new
     @game = Game.new
+    @opponent_id = params[:opponent_id]
   end
 
   # POST /games
   # POST /games.json
   def create
     @game = Game.new(game_params)
+    if game_params[:play_as] == 1
+      @game.white_player = current_user
+      @game.black_player = User.find(game_params[:opponent_id])
+    else
+      @game.white_player = User.find(game_params[:opponent_id])
+      @game.black_player = current_user
+    end
 
     respond_to do |format|
       if @game.save
+        @game.update_players
         format.html { redirect_to @game, notice: 'Game was successfully created.' }
         format.json { render :show, status: :created, location: @game }
       else
@@ -36,6 +45,7 @@ class GamesController < ApplicationController
   # PATCH/PUT /games/1
   # PATCH/PUT /games/1.json
   def update
+    @game.update_players
     respond_to do |format|
       if @game.update(game_params)
         format.html { redirect_to @game, notice: 'Game was successfully updated.' }
@@ -50,6 +60,7 @@ class GamesController < ApplicationController
   # DELETE /games/1
   # DELETE /games/1.json
   def destroy
+    @game.update_players
     @game.destroy
     respond_to do |format|
       format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
@@ -61,10 +72,12 @@ class GamesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_game
       @game = Game.find(params[:id])
+      @opponent_id = 0
+      @opponent_id = params[:opponent_id] unless params[:opponent_id].nil?
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
-      params.require(:game).permit(:white_player_id, :black_player_id, :game_state, :allow_undos, :sandbox_mode)
+      params.require(:game).permit(:play_as, :opponent, :game_state, :allow_undos, :sandbox_mode)
     end
 end

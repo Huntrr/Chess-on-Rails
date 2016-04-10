@@ -65,9 +65,17 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def delete_friend(id)
-    friend = User.find(id)
-    self.friendships.find_by(friend: friend).delete
+  def update_wins_losses
+    new_wins = 0
+    new_losses = 0
+    self.games.each do |game|
+      is_white = game.white_player.id == self.id
+      new_wins = new_wins + 1 if (is_white && game.result == 1) || (!is_white && game.result == -1)
+      new_losses = new_losses + 1 if (is_white && game.result == -1) || (!is_white && game.result == 1)
+    end
+    self.wins = new_wins
+    self.losses = new_losses
     self.save
   end
+
 end

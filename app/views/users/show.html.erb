@@ -44,6 +44,9 @@
           <% if is?(@user) %>
             <td><%= link_to 'Remove friend', "/friendships/#{friendship.id}", method: :delete %></td>
           <% end %>
+          <% if logged_in? %>
+            <td><%= link_create_new_game 'Challenge', friendship.friend %></td>
+          <% end %>
         </tr>
       <% end %>
     </tbody>
@@ -73,6 +76,11 @@
     </tbody>
   </table>
 </p>
+<% end %>
+
+<% if logged_in? %>
+  <%= link_create_new_game "Click here to start a new game against #{@user.name}", @user %>
+  <br><br>
 <% end %>
 
 <% if is?(@user) %>

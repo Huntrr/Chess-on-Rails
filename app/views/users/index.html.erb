@@ -25,6 +25,9 @@
         <% if is?(user) %>
           <td><%= link_to 'Edit', edit_user_path(user) %></td>
         <% end %>
+        <% if logged_in? %>
+          <td><%= link_create_new_game 'Challenge', user %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

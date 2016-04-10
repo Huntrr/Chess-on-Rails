@@ -6,6 +6,7 @@ class CreateGames < ActiveRecord::Migration
       t.text :game_state
       t.boolean :allow_undos, null: false, default: true
       t.boolean :sandbox_mode, null: false, default: false
+      t.integer :result, null: false, default: 0
 
       t.timestamps null: false
     end

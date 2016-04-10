@@ -12,12 +12,11 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :white_player_id %><br>
-    <%= f.text_field :white_player_id %>
+    <%= f.label 'Play as' %><br>
+    <%= f.select :play_as, options_for_select([['White', 1], ['Black', 2]], 1 ) %>
   </div>
-  <div class="field">
-    <%= f.label :black_player_id %><br>
-    <%= f.text_field :black_player_id %>
+  <div class="field" display="none">
+    <%= f.text_field :opponent_id, value: @opponent_id %>
   </div>
   <div class="field">
     <%= f.label :'Starting State' %><br>
@@ -25,13 +24,13 @@
   </div>
   <div class="field">
     <%= f.label :allow_undos %><br>
-    <%= f.check_box :allow_undos %>
+    <%= f.check_box :allow_undos, { checked: true } %>
   </div>
   <div class="field">
     <%= f.label :sandbox_mode %><br>
     <%= f.check_box :sandbox_mode %>
   </div>
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Begin game' %>
   </div>
 <% end %>
