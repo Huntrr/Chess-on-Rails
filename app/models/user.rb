@@ -18,7 +18,7 @@ class User < ActiveRecord::Base
   has_many :friends, source: :friend, through: :friendships
   has_many :pending_friends, source: :friend, through: :pending_friendships
   has_many :friend_requests, through: :friend_requests_relationships, source: :user
-  
+
   def password
     @password ||= Password.new(password_hash)
   end
@@ -29,11 +29,11 @@ class User < ActiveRecord::Base
   end
 
   def num_games
-    Game.where(white_player_id: self.id).count + Game.where(black_player_id: self.id).count
+    Game.where(white_player_id: id).count + Game.where(black_player_id: id).count
   end
 
   def games
-    Game.where('white_player_id= ? OR black_player_id= ?', self.id, self.id)
+    Game.where('white_player_id= ? OR black_player_id= ?', id, id)
   end
 
   def letter?(pattern)
@@ -47,38 +47,34 @@ class User < ActiveRecord::Base
   def send_friend_request(id)
     friend = User.find(id)
     unless friend.nil?
-      if self.friend_requests.exists? friend
-        accept_friend_request(friend)
-      else
-        self.pending_friendships.create({ friend: friend, accepted: false })
-        friend.friend_requests_relationships.create({ user: self, accepted: false })
-      end
+      return accept_friend_request friend if friend_requests.exists? friend
+      pending_friendships.create(friend: friend, accepted: false)
+      friend.friend_requests_relationships.create(user: self, accepted: false)
     end
 
-    self.save
+    save
     friend.save
   end
 
   def force_add_friend(friend)
-    self.friendships.create({ friend: friend, accepted: true})
-    self.save
+    friendships.create(friend: friend, accepted: true)
+    save
   end
 
   def accept_friend_request(friend)
-    self.friend_requests_relationships.find_by(user: friend).delete
-    self.friendships.create({ friend: friend, accepted: true })
+    friend_requests_relationships.find_by(user: friend).delete
+    friendships.create(friend: friend, accepted: true)
     friend.force_add_friend self
-    self.save
+    save
   end
 
   def update_wins_losses
-    new_wins = Game.where(white_player_id: self.id, result: 1).count
-    new_wins = new_wins + Game.where(black_player_id: self.id, result: -1).count
-    new_losses = Game.where(black_player_id: self.id, result: 1).count
-    new_losses = new_losses + Game.where(white_player_id: self.id, result: -1).count
+    new_wins = Game.where(white_player_id: id, result: 1).count
+    new_wins += Game.where(black_player_id: id, result: -1).count
+    new_losses = Game.where(black_player_id: id, result: 1).count
+    new_losses += Game.where(white_player_id: id, result: -1).count
     self.wins = new_wins
     self.losses = new_losses
-    self.save
+    save
   end
-
 end

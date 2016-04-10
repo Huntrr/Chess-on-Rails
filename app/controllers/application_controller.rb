@@ -21,17 +21,17 @@ class ApplicationController < ActionController::Base
 
   helper_method def game_result(result)
     case result.to_i
-      when 1
-        'white won'
+    when 1
+      'white won'
 
-      when -1
-        'black won'
+    when -1
+      'black won'
 
-      when 0
-        'in progress'
+    when 0
+      'in progress'
 
-      else
-        'no winner'
+    else
+      'no winner'
     end
   end
 end

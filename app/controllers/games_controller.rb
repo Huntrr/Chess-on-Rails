@@ -10,7 +10,7 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-    @side = if @game.black_player.id == current_user.id then 'black' else 'white' end
+    @side = @game.black_player.id == current_user.id ? 'black' : 'white'
     @playing = @game.black_player.id == current_user.id || @game.white_player.id == current_user.id
   end
 
@@ -21,29 +21,14 @@ class GamesController < ApplicationController
   end
 
   # POST /games
-  # POST /games.json
   def create
-    gp = game_params
-    if gp[:white_player].to_i == 1
-      gp[:white_player] = current_user
-      gp[:black_player] = User.find(game_params[:opponent_id])
+    @game = setup_game(game_params)
+
+    if @game.save
+      @game.update_players
+      redirect_to @game, notice: 'Game was successfully created.'
     else
-      gp[:white_player] = User.find(game_params[:opponent_id])
-      gp[:black_player] = current_user
-    end
-
-    gp.delete :opponent_id
-    @game = Game.new(gp)
-
-    respond_to do |format|
-      if @game.save
-        @game.update_players
-        format.html { redirect_to @game, notice: 'Game was successfully created.' }
-        format.json { render :show, status: :created, location: @game }
-      else
-        format.html { render :new }
-        format.json { render json: @game.errors, status: :unprocessable_entity }
-      end
+      render :new
     end
   end
 
@@ -74,15 +59,30 @@ class GamesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_game
-      @game = Game.find(params[:id])
-      @opponent_id = 0
-      @opponent_id = params[:opponent_id] unless params[:opponent_id].nil?
+
+  def setup_game(game_params)
+    gp = game_params
+    if gp[:white_player].to_i == 1
+      gp[:white_player] = current_user
+      gp[:black_player] = User.find(game_params[:opponent_id])
+    else
+      gp[:white_player] = User.find(game_params[:opponent_id])
+      gp[:black_player] = current_user
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def game_params
-      params.require(:game).permit(:white_player, :opponent_id, :game_state, :allow_undos, :sandbox_mode, :result)
-    end
+    gp.delete :opponent_id
+    Game.new(gp)
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_game
+    @game = Game.find(params[:id])
+    @opponent_id = 0
+    @opponent_id = params[:opponent_id] unless params[:opponent_id].nil?
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def game_params
+    params.require(:game).permit(:white_player, :opponent_id, :game_state, :allow_undos, :sandbox_mode, :result)
+  end
 end
