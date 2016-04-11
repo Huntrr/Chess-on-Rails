@@ -4,3 +4,68 @@
   Hi <%= current_user.name %>!
 <% end %>
 </div>
+
+<% if logged_in? %>
+<div class="container">
+  <p>
+    <strong>Games in Progress:</strong>
+    <% if current_user.games_in_progress.count > 0 %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>White player</th>
+            <th>Black player</th>
+            <th>Result</th>
+            <th>Sandbox mode</th>
+            <th colspan="3"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% current_user.games_in_progress.each do |game| %>
+            <tr>
+              <td><%= link_to game.white_player.name, game.white_player %></td>
+              <td><%= link_to game.black_player.name, game.black_player %></td>
+              <td><%= game_result(game.result) %></td>
+              <td><%= if game.sandbox_mode then 'yes' else 'no' end %></td>
+              <td><%= link_to 'Show', game %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+  <% else %>
+    You aren't currently playing any games :(
+  <% end %>
+  </p>
+</div>
+
+<div class="container">
+<p>
+  <strong>You have <%= pluralize(current_user.friendships.count, "friend") %></strong>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Tagline/Bio</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% current_user.friendships.each do |friendship| %>
+        <tr>
+          <td><%= link_to friendship.friend.name, friendship.friend %></td>
+          <td><%= friendship.friend.bio %></td>
+          <% if is?(current_user) %>
+            <td><%= link_to 'Remove friend', "/friendships/#{friendship.id}", method: :delete %></td>
+          <% end %>
+          <% if logged_in? && !is?(friendship.friend) %>
+            <td><%= link_to 'Challenge', link_create_new_game(friendship.friend) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</p>
+</div>
+<% end %>

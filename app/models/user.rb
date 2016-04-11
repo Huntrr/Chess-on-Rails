@@ -32,6 +32,10 @@ class User < ActiveRecord::Base
     Game.where(white_player_id: id).count + Game.where(black_player_id: id).count
   end
 
+  def games_in_progress
+    Game.where('white_player_id= ? OR black_player_id= ?', id, id).where('result = 0')
+  end
+
   def games
     Game.where('white_player_id= ? OR black_player_id= ?', id, id)
   end

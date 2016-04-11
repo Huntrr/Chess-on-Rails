@@ -25,7 +25,7 @@
   <p class="hide"><span id="status" style="font-weight: BOLD;"></span></p>
   <div id="board"></div><br class="hide">
   <p class="show pad"><span id="status2" style="font-weight: BOLD;"></span></p>
-  <input type="button" id="undo" value="Undo Move" <%= "disabled" if !@game.allow_undos %>/>
+  <% if @playing %><input type="button" id="undo" value="Undo Move" <%= "disabled" if !@game.allow_undos %>/><% end %>
   <input type="button" id="flip" value="Flip Board" />
 </div>
 

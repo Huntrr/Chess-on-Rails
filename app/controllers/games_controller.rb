@@ -50,8 +50,11 @@ class GamesController < ApplicationController
   # DELETE /games/1
   # DELETE /games/1.json
   def destroy
-    @game.update_players
+    white = @game.white_player
+    black = @game.black_player
     @game.destroy
+    white.update_wins_losses
+    black.update_wins_losses
     respond_to do |format|
       format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
       format.json { head :no_content }
