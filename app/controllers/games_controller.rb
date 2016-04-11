@@ -10,8 +10,13 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
-    @side = @game.black_player.id == current_user.id ? 'black' : 'white'
-    @playing = @game.black_player.id == current_user.id || @game.white_player.id == current_user.id
+    if logged_in?
+      @side = @game.black_player.id == current_user.id ? 'black' : 'white'
+      @playing = @game.black_player.id == current_user.id || @game.white_player.id == current_user.id
+    else
+      @side = 'white'
+      @playing = false
+    end
   end
 
   # GET /games/new
